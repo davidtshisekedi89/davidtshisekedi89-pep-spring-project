@@ -3,6 +3,8 @@ package com.example.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +47,25 @@ public class MessageService {
             return messageRepository.save(message);
         }
         return null;
+    }
+
+    public Message updateMessage(int message_id, Message newMessage) {
+        Message existingMessage = messageRepository.findById(message_id).orElse(null);
+    
+        if (existingMessage != null) {
+            String newMessageText = newMessage.getMessage_text();
+    
+            // Check if the new message text is not blank and is not over 255 characters
+            if (newMessageText != null && !newMessageText.isEmpty() && newMessageText.length() <= 255) {
+                existingMessage.setMessage_text(newMessageText);
+                
+                return messageRepository.save(existingMessage);
+            } else {
+                throw new IllegalArgumentException("Invalid message text");
+            }
+        } else {
+            // Message not found
+            throw new EntityNotFoundException("Message not found");
+        }
     }
 }

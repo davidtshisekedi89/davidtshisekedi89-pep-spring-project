@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -111,6 +112,22 @@ public class SocialMediaController {
             return new ResponseEntity<>(createdMessage, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // You can choose an appropriate status code for internal server error
+        }
+    }
+
+    // Handler to update a message by ID    
+    @PatchMapping("/messages/{message_id}")
+    public ResponseEntity<Object> updateMessage(@PathVariable int message_id, @RequestBody Message newMessage) {
+        if (newMessage.getMessage_text() != null && !newMessage.getMessage_text().isEmpty() && newMessage.getMessage_text().length() <= 255) {
+            Message updatedMessage = messageService.updateMessage(message_id, newMessage);
+            
+            if (updatedMessage != null) {
+                return new ResponseEntity<>(updatedMessage, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
     
