@@ -8,9 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.entity.Account;
 import com.example.entity.Message;
 import com.example.service.AccountService;
 import com.example.service.MessageService;
@@ -43,6 +46,28 @@ public class SocialMediaController {
 
     @Autowired
     private MessageService messageService;
+
+
+    // Handler for user registration 
+    @PostMapping("/register")
+    public ResponseEntity<Account> registerUser(@RequestBody Account account) {
+        Account registeredAccount = accountService.registerUser(account);
+        if (registeredAccount != null) {
+            return new ResponseEntity<>(registeredAccount, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.CONFLICT); // 409 Conflict for duplicate username
+        }
+    }
+    // Handler for Loggin
+    @PostMapping("/login")
+    public ResponseEntity<Account> loginUser(@RequestBody Account account) {
+        Account loggedInAccount = accountService.loginUser(account);
+        if (loggedInAccount != null) {
+            return new ResponseEntity<>(loggedInAccount, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
 
     // Handler to get all messages
     @GetMapping("/messages")
