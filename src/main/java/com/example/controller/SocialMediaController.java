@@ -102,8 +102,16 @@ public class SocialMediaController {
     // Handler for creating a new message
     @PostMapping("/messages")
     public ResponseEntity<Message> createMessage(@RequestBody Message message) {
+        if (message.getMessage_text() == null || message.getMessage_text().isEmpty() || message.getMessage_text().length() >= 255) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400 Bad Request for blank or long message text
+        }
+
         Message createdMessage = messageService.createMessage(message);
-        return new ResponseEntity<>(createdMessage, HttpStatus.OK);
+        if (createdMessage != null) {
+            return new ResponseEntity<>(createdMessage, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // You can choose an appropriate status code for internal server error
+        }
     }
     
 
