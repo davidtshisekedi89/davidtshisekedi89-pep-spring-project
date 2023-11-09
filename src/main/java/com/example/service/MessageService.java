@@ -33,12 +33,14 @@ public class MessageService {
     }
 
     // delete messages
-    public Message deleteMessageById(int message_id) {
-        Message message = messageRepository.findById(message_id).orElse(null);
-        if (message != null) {
+    public int deleteMessageById(int message_id) {
+        Optional<Message> messageOptional = messageRepository.findById(message_id);
+        if (messageOptional.isPresent()) {
             messageRepository.deleteById(message_id);
+            return 1; // 1 row (message) deleted
+        } else {
+            return 0; // 0 rows (no message) deleted
         }
-        return message;
     }
 
     // create messages
@@ -67,4 +69,10 @@ public class MessageService {
             throw new EntityNotFoundException("Message not found");
         }
     }
+
+
+    // get message by user id
+    // public List<Message> getMessagesByUser(int posted_by) {
+    //     return messageRepository.findByAccountId(posted_by);
+    // }
 }

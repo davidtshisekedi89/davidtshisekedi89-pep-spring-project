@@ -93,10 +93,10 @@ public class SocialMediaController {
 
     // Handler to delete a message by ID    
     @DeleteMapping("/messages/{message_id}")
-    public ResponseEntity<Message> deleteMessageById(@PathVariable("message_id") int message_id) {
-        Message deletedMessage = messageService.deleteMessageById(message_id);
-        if (deletedMessage != null) {
-            return new ResponseEntity<>(deletedMessage, HttpStatus.OK);
+    public ResponseEntity<Integer> deleteMessage(@PathVariable("message_id") int message_id) {
+        int rowsModified = messageService.deleteMessageById(message_id);
+        if (rowsModified > 0) {
+            return new ResponseEntity<>(rowsModified, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -133,6 +133,19 @@ public class SocialMediaController {
             return new ResponseEntity<>(0, HttpStatus.BAD_REQUEST);
         }
     }
+
+
+    // Handler to get all messages written by a particular user
+    // @GetMapping("/accounts/{account_id}/messages")
+    // public ResponseEntity<List<Message>> getAllMessagesByUserAccountId(@PathVariable int account_id) {
+    //     List<Message> messages = messageService.getMessagesByUser(account_id);
+
+    //     if (!messages.isEmpty()) {
+    //         return new ResponseEntity<>(messages, HttpStatus.OK);
+    //     } else {
+    //         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    //     }
+    // }
     
 
 
