@@ -49,7 +49,7 @@ public class MessageService {
         return null;
     }
 
-    public Message updateMessage(int message_id, Message newMessage) {
+    public int updateMessage(int message_id, Message newMessage) {
         Message existingMessage = messageRepository.findById(message_id).orElse(null);
     
         if (existingMessage != null) {
@@ -58,13 +58,12 @@ public class MessageService {
             // Check if the new message text is not blank and is not over 255 characters
             if (newMessageText != null && !newMessageText.isEmpty() && newMessageText.length() <= 255) {
                 existingMessage.setMessage_text(newMessageText);
-                
-                return messageRepository.save(existingMessage);
+                messageRepository.save(existingMessage);
+                return 1; // 1 row modified
             } else {
                 throw new IllegalArgumentException("Invalid message text");
             }
         } else {
-            // Message not found
             throw new EntityNotFoundException("Message not found");
         }
     }

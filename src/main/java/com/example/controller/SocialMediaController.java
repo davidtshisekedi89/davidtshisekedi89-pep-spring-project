@@ -2,6 +2,8 @@ package com.example.controller;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -117,17 +119,18 @@ public class SocialMediaController {
 
     // Handler to update a message by ID    
     @PatchMapping("/messages/{message_id}")
-    public ResponseEntity<Object> updateMessage(@PathVariable int message_id, @RequestBody Message newMessage) {
+    public ResponseEntity<Integer> updateMessage(@PathVariable int message_id, @RequestBody Message newMessage) {
         if (newMessage.getMessage_text() != null && !newMessage.getMessage_text().isEmpty() && newMessage.getMessage_text().length() <= 255) {
-            Message updatedMessage = messageService.updateMessage(message_id, newMessage);
-            
-            if (updatedMessage != null) {
-                return new ResponseEntity<>(updatedMessage, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            try {
+                int rowsModified = messageService.updateMessage(message_id, newMessage);
+                return new ResponseEntity<>(rowsModified, HttpStatus.OK);
+            } catch (EntityNotFoundException e) {
+                return new ResponseEntity<>(0, HttpStatus.BAD_REQUEST); // 0 rows modified when the message is not found
+            } catch (IllegalArgumentException e) {
+                return new ResponseEntity<>(0, HttpStatus.BAD_REQUEST);
             }
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(0, HttpStatus.BAD_REQUEST);
         }
     }
     
