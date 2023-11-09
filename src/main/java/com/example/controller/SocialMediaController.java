@@ -98,6 +98,13 @@ public class SocialMediaController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
+
+    // Handler for creating a new message
+    @PostMapping("/messages")
+    public ResponseEntity<Message> createMessage(@RequestBody Message message) {
+        Message createdMessage = messageService.createMessage(message);
+        return new ResponseEntity<>(createdMessage, HttpStatus.OK);
+    }
     
 
 
