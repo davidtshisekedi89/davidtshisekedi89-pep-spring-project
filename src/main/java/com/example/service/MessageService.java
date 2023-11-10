@@ -45,12 +45,24 @@ public class MessageService {
 
     // create messages
     public Message createMessage(Message message) {
-        if (message.getMessage_text() != null && !message.getMessage_text().isEmpty() && message.getMessage_text().length() < 255) {
+        if (userExists(message.getPosted_by()) && isValidMessage(message)) {
             return messageRepository.save(message);
         }
+
         return null;
     }
 
+    public boolean userExists(Integer userId) {
+        // Check if the user exists in the database
+        Optional<Message> user = messageRepository.findById(userId);
+        return user.isPresent();
+    }
+
+    private boolean isValidMessage(Message message) {
+        return message.getMessage_text() != null && !message.getMessage_text().isBlank() ;
+    }
+
+    // update
     public int updateMessage(int message_id, Message newMessage) {
         Message existingMessage = messageRepository.findById(message_id).orElse(null);
     
