@@ -32,17 +32,6 @@ import com.example.service.MessageService;
 @RequestMapping("/")
 public class SocialMediaController {
 
-
-    // private AccountService accountService;
-    // private MessageService messageService;
-
-
-    // @Autowired
-    // public SocialMediaController(AccountService accountService, MessageService messageService){
-    //     this.accountService = accountService;
-    //     this.messageService = messageService;
-    // }
-
     
     @Autowired
     private AccountService accountService;
@@ -58,7 +47,7 @@ public class SocialMediaController {
         if (registeredAccount != null) {
             return new ResponseEntity<>(registeredAccount, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.CONFLICT); // 409 Conflict for duplicate username
+            return new ResponseEntity<>(HttpStatus.CONFLICT); 
         }
     }
     // Handler for Loggin
